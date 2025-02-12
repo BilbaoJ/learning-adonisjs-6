@@ -12,18 +12,8 @@
   </head>
   <body>
     <div class="max-w-3xl mx-auto mt-6">
-      <nav>
-        <a href="{{ route('home') }}">Home</a>
-        <a href="{{ route('movies.show', {slug: 'my-awesome-movie'}) }}">
-          my awesome movie
-        </a>
-        <a href="{{ route('movies.show', {slug: 'another-awesome-movie'}) }}">
-          Another awesome movie
-        </a>
-      </nav>
-
+      @include('partials/nav')
       <h1>It works</h1>
-
       <ul>
         @each(movie in movies)
 
@@ -31,6 +21,9 @@
           <a href="{{ route('movies.show', { slug: movie.slug }) }}">
             {{ movie.title }}
           </a>
+          <p class="text-slate-600">
+            {{ truncate(movie.summary, 50, { completeWords: true }) }}
+          </p>
         </li>
 
         @end
