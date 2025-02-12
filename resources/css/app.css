@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @source "../views";
 
-* {
-  margin: 0;
-  padding: 0;
-}
 
 html,
 body {
