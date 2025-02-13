@@ -39,12 +39,21 @@ export default class Movie extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
-  static releaded = scope((query) => {
+  static released = scope((query) => {
     query.where((group) =>
       group
         .where('statusId', MovieStatuses.RELEASED)
         .whereNotNull('releasedAt')
         .where('releasedAt', '<=', DateTime.now().toSQL())
+    )
+  })
+
+  static notReleased = scope((query) => {
+    query.where((group) =>
+      group
+        .whereNot('statusId', MovieStatuses.RELEASED)
+        .whereNotNull('releasedAt')
+        .orWhere('releasedAt', '>', DateTime.now().toSQL())
     )
   })
 
