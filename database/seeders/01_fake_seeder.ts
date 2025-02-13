@@ -10,7 +10,7 @@ export default class extends BaseSeeder {
   static environment: string[] = ['development', 'testing']
   async run() {
     await CineastFactory.createMany(10)
-    await UserFactory.createMany(5)
+    await UserFactory.with('profile').createMany(5)
     await this.#createMovies()
   }
 
