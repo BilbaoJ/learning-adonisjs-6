@@ -1,4 +1,5 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import MovieStatuses from '#enums/movies_statuses'
+import { BaseModel, column, scope } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export default class Movie extends BaseModel {
@@ -37,6 +38,15 @@ export default class Movie extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  static releaded = scope((query) => {
+    query.where((group) =>
+      group
+        .where('statusId', MovieStatuses.RELEASED)
+        .whereNotNull('releasedAt')
+        .where('releasedAt', '<=', DateTime.now().toSQL())
+    )
+  })
 
   // static async all() {
   //   const slugs = await MovieService.getSlugs()
