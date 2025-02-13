@@ -1,6 +1,6 @@
+@let(className = 'rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm')
 <div
-  class="{{ html.classNames(['rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm', ($props.class || '')]) }}"
-  {{ $props.except(['movie', 'class']).toAttrs() }}
+  {{ $props.merge({ class: [className] }).except(['movie']).toAttrs() }}
   >
     <div class="relative">
       <img src="https://picsum.photos/450/200?v={{ movie.slug }}" class="w-full h-auto" />
@@ -12,8 +12,8 @@
       <p class="mb-5 text-neutral-500">
         {{ movie.summary }}
       </p>
-      <a href="{{ route('movies.show', { slug: movie.slug }) }}" class="inline-flex items-center justify-center w-full h-10 px-4 py-2 text-sm font-medium text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-neutral-950 hover:bg-neutral-950/90">
+      @button({ href: route('movies.show', { slug: movie.slug }) })
         View Movie
-      </a>
+      @end
     </div>
 </div>
