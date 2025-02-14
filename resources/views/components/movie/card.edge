@@ -2,8 +2,8 @@
 <div
   {{ $props.merge({ class: [className] }).except(['movie']).toAttrs() }}
   >
-    <div class="relative">
-      <img src="{{ movie.posterUrl }}" class="w-full h-auto" />
+    <div class="relative bg-cover">
+      <img src="{{ movie.posterUrl }}" class="w-full h-40" />
     </div>
     <div class="p-4">
       <h3 class="font-bold leading-none tracking-tight">
