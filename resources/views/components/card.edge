@@ -1,0 +1,11 @@
+@let(className = 'rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm')
+<div
+  {{ $props.merge({ class: [className] }).except(['movie']).toAttrs() }}
+  >
+  @if($slots.picture)
+    {{{ await $slots.picture() }}}
+  @end
+    <div class="p-4">
+      {{{ await $slots.main() }}}
+    </div>
+</div>
