@@ -8,15 +8,30 @@
 
         <label class="flex flex-col">
           <span class="text-xs font-bold">Full Name</span>
-          <input type="text" name="fullName" />
+          <input type="text" name="fullName" value="{{ old('fullName') || '' }}" />
+          @inputError('fullName')
+            <p class="text-xs text-red-500">
+              {{ $messages.join(', ') }}
+            </p>
+          @end
         </label>
         <label class="flex flex-col">
           <span class="text-xs font-bold">Email</span>
-          <input type="text" name="email" />
+          <input type="text" name="email" value="{{ old('email') || '' }}" />
+          @inputError('email')
+            <p class="text-xs text-red-500">
+              {{ $messages.join(', ') }}
+            </p>
+          @end
         </label>
         <label class="flex flex-col">
           <span class="text-xs font-bold">Password</span>
           <input type="password" name="password" />
+          @inputError('password')
+            <p class="text-xs text-red-500">
+              {{ $messages.join(', ') }}
+            </p>
+          @end
         </label>
 
         @button({ type: 'submit' })
