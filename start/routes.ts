@@ -61,3 +61,15 @@ router
   })
   .prefix('/auth')
   .as('auth')
+
+router
+  .group(() => {
+    router
+      .get('/', async (ctx) => {
+        return 'You are here!'
+      })
+      .as('index')
+  })
+  .prefix('/admin')
+  .as('admin')
+  .use(middleware.admin())
