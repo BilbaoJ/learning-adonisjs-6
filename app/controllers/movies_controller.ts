@@ -2,22 +2,16 @@ import Movie from '#models/movie'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MoviesController {
-  async index({ view }: HttpContext) {
-    const comingSoon = await Movie.query()
-      .apply((scope) => scope.notReleased)
-      .preload('director')
-      .preload('writer')
-      .whereNotNull('releasedAt')
-      .orderBy('releasedAt')
-      .limit(3)
-
-    const recentlyReleased = await Movie.query()
+  async index({ request, view }: HttpContext) {
+    const qs = request.qs()
+    const movies = await Movie.query()
       .apply((scope) => scope.released())
+      .if(qs.search, (query) => query.whereILike('title', `%${qs.search}%`))
       .preload('director')
       .preload('writer')
-      .orderBy('releasedAt', 'desc')
-      .limit(9)
-    return view.render('pages/home', { comingSoon, recentlyReleased })
+      .orderBy('title', 'asc')
+      .limit(15)
+    return view.render('pages/movies/index', { movies, filters: qs })
   }
 
   async show({ view, params }: HttpContext) {
