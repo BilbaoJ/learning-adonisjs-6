@@ -1,17 +1,22 @@
 import Movie from '#models/movie'
+import MovieStatus from '#models/movie_status'
+import MovieService from '#services/movie_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MoviesController {
   async index({ request, view }: HttpContext) {
     const qs = request.qs()
-    const movies = await Movie.query()
-      .apply((scope) => scope.released())
-      .if(qs.search, (query) => query.whereILike('title', `%${qs.search}%`))
-      .preload('director')
-      .preload('writer')
-      .orderBy('title', 'asc')
-      .limit(15)
-    return view.render('pages/movies/index', { movies, filters: qs })
+    const movies = await MovieService.getFiltered(qs)
+
+    const movieStatuses = await MovieStatus.query().orderBy('name').select('id', 'name')
+    const movieSortOptions = MovieService.sortOptions
+
+    return view.render('pages/movies/index', {
+      movies,
+      movieStatuses,
+      movieSortOptions,
+      filters: qs,
+    })
   }
 
   async show({ view, params }: HttpContext) {
