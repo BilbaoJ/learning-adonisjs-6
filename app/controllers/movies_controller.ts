@@ -1,12 +1,13 @@
 import Movie from '#models/movie'
 import MovieStatus from '#models/movie_status'
 import MovieService from '#services/movie_service'
+import { movieFilterValidator } from '#validators/movie'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MoviesController {
   async index({ request, view }: HttpContext) {
-    const qs = request.qs()
-    const movies = await MovieService.getFiltered(qs)
+    const filters = await movieFilterValidator.validate(request.qs())
+    const movies = await MovieService.getFiltered(filters)
 
     const movieStatuses = await MovieStatus.query().orderBy('name').select('id', 'name')
     const movieSortOptions = MovieService.sortOptions
@@ -15,7 +16,7 @@ export default class MoviesController {
       movies,
       movieStatuses,
       movieSortOptions,
-      filters: qs,
+      filters,
     })
   }
 
