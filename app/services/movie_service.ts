@@ -21,7 +21,6 @@ export default class MovieService {
   ]
 
   static getFiltered(
-    page: number = 1,
     filters: Infer<typeof movieFilterValidator>,
     user: User | undefined = undefined
   ) {
@@ -41,6 +40,5 @@ export default class MovieService {
       .preload('writer')
       .preload('status')
       .orderBy(sort.field, sort.dir)
-      .paginate(page, 15)
   }
 }
