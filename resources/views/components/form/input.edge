@@ -11,14 +11,19 @@
       @end
     </span>
   @end
-  @if(type === 'select')
-  <select name="{{ name || '' }}">
-    {{{ await $slots.main() }}}
-  </select>
 
+  @if(type === 'select')
+    <select name="{{ name || '' }}">
+      {{{ await $slots.main() }}}
+    </select>
+  @elseif(type === 'textarea')
+    <textarea name="{{ name || '' }}">
+      {{ value || '' }}
+    </textarea>
   @else
     <input type="{{ type || 'text' }}" name="{{ name || '' }}" value="{{ value || '' }}" />
   @end
+
   @if(name)
     @inputError(name)
       <p class="text-xs text-red-500">

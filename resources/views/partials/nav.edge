@@ -11,6 +11,11 @@
       <a href="{{ route('watchlists.index') }}" class="text-xs">
         Watchlist
       </a>
+
+      <a href="{{ route('profiles.edit') }}" class="text-xs">
+        Edit Profile
+      </a>
+
       <form method="POST" action="{{ route('auth.logout') }}" >
         {{ csrfField() }}
         <button type="submit" class="text-xs">
