@@ -48,7 +48,19 @@
   {{-- <p class="mb-5 text-neutral-500">
     {{ movie.summary }}
   </p> --}}
-  @button({ href: route('movies.show', { slug: movie.slug }) })
-    View Movie
-  @end
+
+  <div class="mt-4 flex flex-col gap-2">
+    @if(auth.user && movie.watchlist)
+      <form method="POST" action="{{ route('watchlist.toggle', { movieId: movie.id }) }}">
+        {{ csrfField() }}
+        @button({ type: 'submit' })
+          {{ movie.watchlist.length ? 'In your watchlist' : 'Add to watchlist' }}
+        @end
+      </form>
+    @end
+
+    @button({ href: route('movies.show', { slug: movie.slug }) })
+      View Movie
+    @end
+  </div>
 @end
