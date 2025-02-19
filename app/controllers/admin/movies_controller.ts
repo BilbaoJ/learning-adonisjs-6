@@ -27,9 +27,10 @@ export default class MoviesController {
    * Display form to create a new record
    */
   async create({ view }: HttpContext) {
-    const data = await MovieService.getFormData()
-    return view.render('pages/admin/movies/create', {
-      data,
+    const { statuses, cineasts } = await MovieService.getFormData()
+    return view.render('pages/admin/movies/createOrEdit', {
+      statuses,
+      cineasts,
     })
   }
 
@@ -53,7 +54,7 @@ export default class MoviesController {
   async edit({ view, params }: HttpContext) {
     const movie = await Movie.findOrFail(params.id)
     const data = await MovieService.getFormData()
-    return view.render('pages/admin/movies/edit', {
+    return view.render('pages/admin/movies/createOrEdit', {
       ...data,
       movie,
     })
