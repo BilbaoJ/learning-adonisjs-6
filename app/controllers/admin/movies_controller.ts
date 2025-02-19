@@ -1,4 +1,7 @@
+import Cineast from '#models/cineast'
 import Movie from '#models/movie'
+import MovieStatus from '#models/movie_status'
+import { movieStoreValidator } from '#validators/movie'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -24,12 +27,23 @@ export default class MoviesController {
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ view }: HttpContext) {
+    const statuses = await MovieStatus.query().orderBy('name')
+    const cineasts = await Cineast.query().orderBy('lastName')
+    return view.render('pages/admin/movies/create', {
+      statuses,
+      cineasts,
+    })
+  }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const data = await request.validateUsing(movieStoreValidator)
+    await Movie.create(data)
+    return response.redirect().toRoute('admin.movies.index')
+  }
 
   /**
    * Show individual record
@@ -44,7 +58,7 @@ export default class MoviesController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({}: HttpContext) {}
 
   /**
    * Delete record
