@@ -1,7 +1,6 @@
-import Cineast from '#models/cineast'
 import Movie from '#models/movie'
-import MovieStatus from '#models/movie_status'
-import { movieStoreValidator } from '#validators/movie'
+import MovieService from '#services/movie_service'
+import { movieValidator } from '#validators/movie'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 
@@ -28,11 +27,9 @@ export default class MoviesController {
    * Display form to create a new record
    */
   async create({ view }: HttpContext) {
-    const statuses = await MovieStatus.query().orderBy('name')
-    const cineasts = await Cineast.query().orderBy('lastName')
+    const data = await MovieService.getFormData()
     return view.render('pages/admin/movies/create', {
-      statuses,
-      cineasts,
+      data,
     })
   }
 
@@ -40,7 +37,7 @@ export default class MoviesController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const data = await request.validateUsing(movieStoreValidator)
+    const data = await request.validateUsing(movieValidator)
     await Movie.create(data)
     return response.redirect().toRoute('admin.movies.index')
   }
@@ -53,12 +50,24 @@ export default class MoviesController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ view, params }: HttpContext) {
+    const movie = await Movie.findOrFail(params.id)
+    const data = await MovieService.getFormData()
+    return view.render('pages/admin/movies/edit', {
+      ...data,
+      movie,
+    })
+  }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({}: HttpContext) {}
+  async update({ params, request, response }: HttpContext) {
+    const data = await request.validateUsing(movieValidator)
+    const movie = await Movie.findOrFail(params.id)
+    await movie.merge(data).save()
+    return response.redirect().toRoute('admin.movies.index')
+  }
 
   /**
    * Delete record

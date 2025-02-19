@@ -1,27 +1,29 @@
 @layout.admin()
-  <h1>Create a new movie</h1>
+  <h1>Update {{ movie.title }}</h1>
 
-  <form method="POST" action="{{ route('admin.movies.store') }}" class="flex flex-col gap-4">
+  <form method="POST" action="{{ route('admin.movies.update', {id: movie.id}, {qs: {_method: 'PUT'}}) }}" class="flex flex-col gap-4">
     {{ csrfField() }}
 
     @!form.input({
       label: 'Title',
-      name: 'title'
+      name: 'title',
+      value: movie.title
     })
 
     @!form.input({
       type: 'date',
       label: 'Release Date',
-      name: 'releasedAt'
+      name: 'releasedAt',
+      value: movie.releasedAt.toFormat('yyyy-MM-dd')
     })
 
     @form.input({
       type: 'select',
       label: 'Status',
-      name: 'statusId'
+      name: 'statusId',
     })
       @each(status in statuses)
-        <option value="{{ status.id }}">
+        <option value="{{ status.id }}" {{ html.attrs({ selected: movie.statusId === status.id }) }}>
           {{ status.name }}
         </option>
       @end
@@ -33,7 +35,7 @@
       name: 'writerId'
     })
       @each(cineast in cineasts)
-        <option value="{{ cineast.id }}">
+        <option value="{{ cineast.id }}" {{ html.attrs({ selected: movie.writerId === cineast.id }) }}>
           {{ cineast.fullName }}
         </option>
       @end
@@ -45,7 +47,7 @@
       name: 'directorId'
     })
       @each(cineast in cineasts)
-        <option value="{{ cineast.id }}">
+        <option value="{{ cineast.id }}" {{ html.attrs({ selected: movie.directorId === cineast.id }) }}>
           {{ cineast.fullName }}
         </option>
       @end
@@ -54,17 +56,19 @@
     @!form.input({
       type: 'textarea',
       label: 'Summary',
-      name: 'summary'
+      name: 'summary',
+      value: movie.summary
     })
 
     @!form.input({
       type: 'textarea',
       label: 'Abstract',
-      name: 'abstract'
+      name: 'abstract',
+      value: movie.abstract
     })
 
     @button({ type: 'submit' })
-      Create Movie
+      Update Movie
     @end
   </form>
 @end
