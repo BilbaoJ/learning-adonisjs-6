@@ -97,33 +97,40 @@
 
     <h4 class="font-bold">Crew members</h4>
 
-    <div id="crewList" class="flex flex-col gap-3">
-      @each((member, index) in crewMembers)
-        @!movie.crewMemberFields({ member, cineasts, index })
-      @end
-    </div>
+    <div x-data="{ members: {{ js.stringify(crewMembers) }} }">
+      <div class="flex flex-col gap-3">
+        <template x-for="(member, index) in members" :key="member.id">
+          <div class="flex gap-3">
+            <label class="flex flex-col">
+              <span class="text-xs font-bold">Crew Members</span>
+              <select :name="`crew[${index}][id]`" x-model="members[index].cineast_id">
+                @each(cineast in cineasts)
+                  <option value="{{ cineast.id }}">
+                    {{ cineast.fullName }}
+                  </option>
+                @end
+              </select>
+            </label>
 
-    <button type="button" onclick="addCrewMember()">Add Crew Member</button>
+            <label class="flex flex-col">
+              <span class="text-xs font-bold">Crew Members</span>
+              <input type="text" :name="`crew[${index}][title]`" x-model="members[index].title"/>
+            </label>
+
+            <button type="button" @click="members = members.filter(item => item.id !== member.id)">
+              &times;
+            </button>
+          </div>
+        </template>
+      </div>
+
+      <button type="button" @click="members.push({ id: {{ cineasts[0].id }}, title: '' })">Add Crew Member</button>
+    </div>
 
     @button({ type: 'submit' })
       {{ movie ? 'Update' : 'Create' }} Movie
     @end
   </form>
 
-  <template id="crewTemplate">
-     @!movie.crewMemberFields({ member: null, cineasts, index: 'INDEX' })
-  </template>
-
-  <script>
-    const crewList = document.getElementById('crewList')
-    const crewTemplate = document.getElementById('crewTemplate')
-
-    function addCrewMember() {
-      const nextIndex = crewList.children.length
-      const html = crewTemplate.innerHTML.replaceAll('INDEX', nextIndex)
-      const temp = document.createElement('div')
-      temp.innerHTML = html
-      crewList.appendChild(temp.firstElementChild)
-    }
-  </script>
+  <script src="//unpkg.com/alpinejs" defer></script>
 @end
