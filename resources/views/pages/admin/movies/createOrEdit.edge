@@ -97,9 +97,9 @@
 
     <h4 class="font-bold">Crew members</h4>
 
-    <div x-data="{ members: {{ js.stringify(crewMembers) }} }">
+    <div x-data="{ members: {{ js.stringify(crewMembers || []) }} }">
       <div class="flex flex-col gap-3">
-        <template x-for="(member, index) in members" :key="member.id">
+        <template x-for="(member, index) in members" :key="member.cineast_id">
           <div class="flex gap-3">
             <label class="flex flex-col">
               <span class="text-xs font-bold">Crew Members</span>
@@ -113,18 +113,50 @@
             </label>
 
             <label class="flex flex-col">
-              <span class="text-xs font-bold">Crew Members</span>
+              <span class="text-xs font-bold">Title</span>
               <input type="text" :name="`crew[${index}][title]`" x-model="members[index].title"/>
             </label>
 
-            <button type="button" @click="members = members.filter(item => item.id !== member.id)">
+            <button type="button" @click="members = members.filter(item => item.cineast_id !== member.cineast_id)">
               &times;
             </button>
           </div>
         </template>
       </div>
 
-      <button type="button" @click="members.push({ id: {{ cineasts[0].id }}, title: '' })">Add Crew Member</button>
+      <button type="button" @click="members.push({ cineast_id: {{ cineasts[0].id }}, title: '' })">Add Crew Member</button>
+    </div>
+
+    <h4 class="font-bold">Cast members</h4>
+
+    <div x-data="{ members: {{ js.stringify(castMembers || []) }} }">
+      <div class="flex flex-col gap-3">
+        <template x-for="(member, index) in members" :key="member.cineast_id">
+          <div class="flex gap-3">
+            <label class="flex flex-col">
+              <span class="text-xs font-bold">Cast Member</span>
+              <select :name="`cast[${index}][id]`" x-model="members[index].cineast_id">
+                @each(cineast in cineasts)
+                  <option value="{{ cineast.id }}">
+                    {{ cineast.fullName }}
+                  </option>
+                @end
+              </select>
+            </label>
+
+            <label class="flex flex-col">
+              <span class="text-xs font-bold">Character name</span>
+              <input type="text" :name="`cast[${index}][character_name]`" x-model="members[index].character_name"/>
+            </label>
+
+            <button type="button" @click="members = members.filter(item => item.cineast_id !== member.cineast_id)">
+              &times;
+            </button>
+          </div>
+        </template>
+      </div>
+
+      <button type="button" @click="members.push({ cineast_id: {{ cineasts[0].id }}, character_name: '' })">Add Cast Member</button>
     </div>
 
     @button({ type: 'submit' })
