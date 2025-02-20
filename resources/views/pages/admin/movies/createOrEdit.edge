@@ -95,8 +95,35 @@
       value: movie?.abstract
     })
 
+    <h4 class="font-bold">Crew members</h4>
+
+    <div id="crewList" class="flex flex-col gap-3">
+      @each((member, index) in crewMembers)
+        @!movie.crewMemberFields({ member, cineasts, index })
+      @end
+    </div>
+
+    <button type="button" onclick="addCrewMember()">Add Crew Member</button>
+
     @button({ type: 'submit' })
       {{ movie ? 'Update' : 'Create' }} Movie
     @end
   </form>
+
+  <template id="crewTemplate">
+     @!movie.crewMemberFields({ member: null, cineasts, index: 'INDEX' })
+  </template>
+
+  <script>
+    const crewList = document.getElementById('crewList')
+    const crewTemplate = document.getElementById('crewTemplate')
+
+    function addCrewMember() {
+      const nextIndex = crewList.children.length
+      const html = crewTemplate.innerHTML.replaceAll('INDEX', nextIndex)
+      const temp = document.createElement('div')
+      temp.innerHTML = html
+      crewList.appendChild(temp.firstElementChild)
+    }
+  </script>
 @end
