@@ -46,6 +46,7 @@ export default class ProfilesController {
       await request.validateUsing(profileUpdateValidator)
     const trx = await db.transaction()
     auth.user!.useTransaction(trx)
+
     try {
       const profile = await this.profileService.find()
       if (avatar) {
